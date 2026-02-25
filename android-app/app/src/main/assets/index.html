@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#5B8C5A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Crianza Respetuosa</title>
+    <style>
+        :root {
+            --sage-primary: #5B8C5A;
+            --sage-secondary: #7BA17A;
+            --sage-light: #A8D4A7;
+            --sage-dark: #3D5E3C;
+            --sage-bg: #F8FAF7;
+            --warm-beige: #FBF7F0;
+            --text-primary: #2D3436;
+            --text-secondary: #636E72;
+            --white: #FFFFFF;
+            --error: #E74C3C;
+            --success: #27AE60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--sage-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--sage-primary), var(--sage-dark));
+            color: var(--white);
+            padding: 20px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+        
+        /* Navigation */
+        .nav {
+            display: flex;
+            overflow-x: auto;
+            background: var(--white);
+            border-bottom: 1px solid #e0e0e0;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+        
+        .nav-btn.active {
+            color: var(--sage-primary);
+            background: var(--warm-beige);
+        }
+        
+        .nav-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* Main content */
+        .main {
+            flex: 1;
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #f0f0f0;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        /* Consultation */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .chat-input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            padding: 12px 16px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+            resize: none;
+            min-height: 44px;
+            max-height: 100px;
+        }
+        
+        .chat-input:focus {
+            border-color: var(--sage-primary);
+        }
+        
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sage-primary), var(--sage-dark));
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .message {
+            padding: 12px 16px;
+            border-radius: 16px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+        
+        .message.user {
+            background: linear-gradient(135deg, var(--sage-primary), var(--sage-dark));
+            color: var(--white);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.assistant {
+            background: var(--warm-beige);
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message h4 {
+            font-size: 14px;
+            margin: 12px 0 8px;
+            color: var(--sage-primary);
+        }
+        
+        .message h4:first-child {
+            margin-top: 0;
+        }
+        
+        .message ul, .message ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        
+        .message li {
+            margin: 4px 0;
+            font-size: 13px;
+        }
+        
+        /* Modules */
+        .module-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--sage-primary);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .module-card:active {
+            transform: scale(0.98);
+        }
+        
+        .module-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        
+        /* Phrases */
+        .phrase-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--sage-light);
+        }
+        
+        .phrase-text {
+            font-size: 15px;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .phrase-context {
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: var(--warm-beige);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        /* Category tabs */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-tab {
+            padding: 8px 16px;
+            border: 1px solid var(--sage-light);
+            border-radius: 20px;
+            background: var(--white);
+            color: var(--text-primary);
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        
+        .category-tab.active {
+            background: var(--sage-primary);
+            color: var(--white);
+            border-color: var(--sage-primary);
+        }
+        
+        /* Progress */
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--sage-primary);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .stats-grid {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        /* Slider */
+        .slider-container {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--sage-primary);
+            cursor: pointer;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sage-primary), var(--sage-dark));
+            color: var(--white);
+            width: 100%;
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        /* Welcome */
+        .welcome {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .welcome-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--sage-primary), var(--sage-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .suggestions {
+            margin-top: 20px;
+        }
+        
+        .suggestion-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: var(--white);
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: var(--warm-beige);
+            border-radius: 16px;
+            align-self: flex-start;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--sage-light);
+            border-top-color: var(--sage-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--white);
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* Disclaimer */
+        .disclaimer {
+            background: #FFF8E1;
+            border: 1px solid #FFE082;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            color: #F57C00;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            Crianza Respetuosa
+        </h1>
+        <p>Asistente IA para padres de niños de 3-10 años</p>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <button class="nav-btn active" data-section="consultation">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+            Consulta
+        </button>
+        <button class="nav-btn" data-section="modules">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Módulos
+        </button>
+        <button class="nav-btn" data-section="phrases">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+            Frases
+        </button>
+        <button class="nav-btn" data-section="progress">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+            Progreso
+        </button>
+        <button class="nav-btn" data-section="academic">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+            Académico
+        </button>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Consultation Section -->
+        <section id="consultation" class="section active">
+            <div id="chat-messages" class="chat-container">
+                <div class="welcome">
+                    <div class="welcome-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                    <h2>¿Cómo puedo ayudarte hoy?</h2>
+                    <p style="color: var(--text-secondary); margin-top: 8px;">Describe una situación con tu hijo/a</p>
+                    
+                    <div class="suggestions">
+                        <button class="suggestion-btn" onclick="useSuggestion('Mi hijo tiene berrinches cuando le digo que no puede tener algo')">
+                            Mi hijo tiene berrinches cuando le digo que no
+                        </button>
+                        <button class="suggestion-btn" onclick="useSuggestion('Mis hijos se pelean constantemente, no sé qué hacer')">
+                            Mis hijos se pelean constantemente
+                        </button>
+                        <button class="suggestion-btn" onclick="useSuggestion('No sé cómo poner límites sin gritar')">
+                            No sé cómo poner límites sin gritar
+                        </button>
+                        <button class="suggestion-btn" onclick="useSuggestion('Mi hijo no quiere hacer la tarea')">
+                            Mi hijo no quiere hacer la tarea
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Modules Section -->
+        <section id="modules" class="section">
+            <h2 style="margin-bottom: 16px;">Módulos Psicoeducativos</h2>
+            
+            <div class="module-card" onclick="showModule('comportamiento')">
+                <div class="module-icon" style="background: #E8F5E9;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#4CAF50"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                </div>
+                <div class="card-title">Comprensión del Comportamiento</div>
+                <div class="card-desc">Entiende por qué los niños actúan como actúan</div>
+            </div>
+            
+            <div class="module-card" onclick="showModule('berrinches')">
+                <div class="module-icon" style="background: #FFF3E0;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF9800"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>
+                </div>
+                <div class="card-title">Manejo de Berrinches</div>
+                <div class="card-desc">Estrategias para momentos de descontrol</div>
+            </div>
+            
+            <div class="module-card" onclick="showModule('limites')">
+                <div class="module-icon" style="background: #E3F2FD;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#2196F3"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                </div>
+                <div class="card-title">Límites Firmes y Amables</div>
+                <div class="card-desc">Cómo establecer reglas sin ser autoritario</div>
+            </div>
+            
+            <div class="module-card" onclick="showModule('consecuencias')">
+                <div class="module-icon" style="background: #F3E5F5;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#9C27B0"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                </div>
+                <div class="card-title">Consecuencias vs Castigos</div>
+                <div class="card-desc">La diferencia que cambia todo</div>
+            </div>
+            
+            <div class="module-card" onclick="showModule('regulacion')">
+                <div class="module-icon" style="background: #FCE4EC;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#E91E63"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <div class="card-title">Regulación Emocional</div>
+                <div class="card-desc">Primero tú, luego tu hijo</div>
+            </div>
+            
+            <div class="module-card" onclick="showModule('tdah')">
+                <div class="module-icon" style="background: #E0F7FA;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#00BCD4"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.92 6-4.72 7.28L13 17v5h5l-1.22-1.22C19.91 19.07 22 15.76 22 12c0-5.18-3.95-9.45-9-9.95zM11 2.05C5.94 2.55 2 6.81 2 12c0 3.76 2.09 7.07 5.22 8.78L6 22h5v-5l-2.28 2.28C6.92 18 5 15.21 5 12c0-4.08 3.05-7.44 7-7.93V2.05z"/></svg>
+                </div>
+                <div class="card-title">Adaptaciones para TDAH</div>
+                <div class="card-desc">Estrategias específicas para TDAH</div>
+            </div>
+        </section>
+        
+        <!-- Phrases Section -->
+        <section id="phrases" class="section">
+            <h2 style="margin-bottom: 16px;">Biblioteca de Frases</h2>
+            
+            <div class="category-tabs">
+                <button class="category-tab active" onclick="showCategory('berrinches')">Berrinches</button>
+                <button class="category-tab" onclick="showCategory('desobediencia')">Desobediencia</button>
+                <button class="category-tab" onclick="showCategory('hermanos')">Hermanos</button>
+                <button class="category-tab" onclick="showCategory('pantallas')">Pantallas</button>
+                <button class="category-tab" onclick="showCategory('tareas')">Tareas</button>
+            </div>
+            
+            <div id="phrases-container">
+                <!-- Phrases will be loaded here -->
+            </div>
+        </section>
+        
+        <!-- Progress Section -->
+        <section id="progress" class="section">
+            <h2 style="margin-bottom: 16px;">Tu Progreso Semanal</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="avg-scream">-</div>
+                    <div class="stat-label">Promedio gritos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="punishment-rate">-</div>
+                    <div class="stat-label">Usó castigos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="positive-moments">-</div>
+                    <div class="stat-label">Momentos +</div>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Nivel de gritos esta semana</span>
+                    <span id="scream-value">3/5</span>
+                </div>
+                <input type="range" min="1" max="5" value="3" id="scream-slider" oninput="updateScream(this.value)">
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">1 = Casi no grité, 5 = Grité mucho</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Registro de la semana</div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>¿Usaste castigos?</span>
+                        <input type="checkbox" id="punishment-check">
+                    </div>
+                    <div>
+                        <span>Límites firmes y amables aplicados:</span>
+                        <input type="number" id="gentle-limits" value="0" min="0" style="width: 60px; margin-left: 8px; padding: 8px; border: 1px solid #e0e0e0; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <span>Momentos positivos:</span>
+                        <input type="number" id="positive-input" value="0" min="0" style="width: 60px; margin-left: 8px; padding: 8px; border: 1px solid #e0e0e0; border-radius: 4px;">
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="margin-top: 16px;" onclick="saveProgress()">Guardar Registro</button>
+            </div>
+        </section>
+        
+        <!-- Academic Section -->
+        <section id="academic" class="section">
+            <h2 style="margin-bottom: 16px;">Sección Académica</h2>
+            
+            <div class="card">
+                <div class="card-title">📚 Fundamento Teórico</div>
+                <div class="card-desc" style="margin-bottom: 12px;">
+                    Esta aplicación se basa en modelos respaldados por evidencia científica:
+                </div>
+                <ul style="padding-left: 20px; font-size: 14px;">
+                    <li style="margin: 8px 0;"><strong>Disciplina Positiva</strong> - Jane Nelsen</li>
+                    <li style="margin: 8px 0;"><strong>Psicología Adleriana</strong> - Alfred Adler</li>
+                    <li style="margin: 8px 0;"><strong>Neurociencia del Desarrollo</strong> - Daniel Siegel</li>
+                    <li style="margin: 8px 0;"><strong>Terapia Cognitivo-Conductual</strong></li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📊 Evaluación Pre/Post</div>
+                <div class="card-desc">
+                    Escalas de medición para investigación
+                </div>
+                <button class="btn btn-primary" style="margin-top: 12px;" onclick="showToast('Función disponible en la versión web completa')">Iniciar Evaluación</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📥 Exportar Datos</div>
+                <div class="card-desc">
+                    Descarga tus datos para análisis
+                </div>
+                <button class="btn btn-primary" style="margin-top: 12px;" onclick="showToast('Función disponible en la versión web completa')">Exportar JSON/CSV</button>
+            </div>
+            
+            <div class="disclaimer">
+                <strong>⚠️ Aviso Ético:</strong> Esta herramienta es psicoeducativa y no sustituye la terapia psicológica profesional. Si detectas situaciones de violencia o riesgo, contacta a un profesional de salud mental.
+            </div>
+        </section>
+    </main>
+    
+    <!-- Chat Input -->
+    <div class="chat-input-area" id="chat-input-area" style="display: none;">
+        <textarea class="chat-input" id="message-input" placeholder="Describe la situación..." rows="1"></textarea>
+        <button class="send-btn" onclick="sendMessage()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+        </button>
+    </div>
+    
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        // ⚙️ CONFIGURACIÓN - Servidor de IA desplegado
+        const API_URL = 'https://crianza-respetuosa.vercel.app/api/chat';
+        
+        // State
+        let messages = [];
+        let currentSection = 'consultation';
+        let currentCategory = 'berrinches';
+        let isLoading = false;
+        
+        // Phrases data
+        const phrases = {
+            berrinches: [
+                { phrase: "Veo que estás muy molesto/a. Es difícil cuando no podemos tener lo que queremos.", context: "Cuando llora por algo que no puede tener" },
+                { phrase: "Tus sentimientos son muy grandes ahora. Estoy aquí contigo.", context: "Durante el berrinche" },
+                { phrase: "Cuando estés listo/a para hablar, yo estaré aquí esperándote.", context: "Cuando está gritando" },
+                { phrase: "Tu cuerpo necesita calmarse. ¿Quieres un abrazo o prefieres espacio?", context: "Ofreciendo opciones" },
+                { phrase: "Entiendo que querías eso. No se puede hoy, y está bien que te sientas triste.", context: "En tienda o lugar público" }
+            ],
+            desobediencia: [
+                { phrase: "Sé que quieres seguir jugando. Es hora de cenar. ¿Prefieres lavarte las manos tú o te ayudo?", context: "Transiciones difíciles" },
+                { phrase: "La pregunta no es si vas a bañarte, es cuándo. ¿Ahora o en 5 minutos?", context: "Cuando se niega a cooperar" },
+                { phrase: "Te escucho diciendo que no quieres. Entiendo. Esto necesita hacerse. ¿Cómo te gustaría hacerlo?", context: "Negativa constante" },
+                { phrase: "Cuando digas 'no' a limpiar, los juguetes descansan en la caja hasta mañana.", context: "Consecuencia lógica" },
+                { phrase: "Parece que necesitas ayuda. Vamos a hacerlo juntos.", context: "Cuando hay resistencia" }
+            ],
+            hermanos: [
+                { phrase: "Veo dos niños que tienen un problema. ¿Quieren ayuda para resolverlo?", context: "Inicio de conflicto" },
+                { phrase: "Aquí no se golpea. Vamos a separarnos un momento y luego hablamos.", context: "Conflicto físico" },
+                { phrase: "Cada uno me cuenta su versión sin interrumpir. Tú primero, luego tú.", context: "Ambos quieren hablar" },
+                { phrase: "Este juguete es para compartir. Si no pueden, lo guardo por ahora.", context: "Disputa por objeto" },
+                { phrase: "¿Qué solución se les ocurre que funcione para los dos?", context: "Buscando resolución" }
+            ],
+            pantallas: [
+                { phrase: "El tiempo de pantalla terminó. ¿Quieres apagar tú o lo hago yo?", context: "Fin del tiempo" },
+                { phrase: "Sé que es difícil apagar. El cerebro quiere seguir. Es hora de hacer otra cosa.", context: "Resistencia" },
+                { phrase: "Las pantallas descansan después de cenar. Esa es la regla de nuestra familia.", context: "Regla establecida" },
+                { phrase: "Tu cuerpo necesita moverse. ¿Qué prefieres: saltar o dibujar?", context: "Alternativas activas" },
+                { phrase: "Aprecio cómo apagaste sin quejarte. Eso muestra madurez.", context: "Después de cooperar" }
+            ],
+            tareas: [
+                { phrase: "Veo que la tarea es difícil. ¿Qué parte te cuesta más? Vamos a revisarla juntos.", context: "Frustración" },
+                { phrase: "¿Cuánto tiempo necesitas? ¿30 minutos o 45?", context: "Planificación" },
+                { phrase: "Primero terminamos la tarea, luego puedes jugar. ¿Por cuál empiezas?", context: "Secuencia clara" },
+                { phrase: "No necesitas hacerlo perfecto. Necesitas hacerlo.", context: "Perfeccionismo" },
+                { phrase: "Tómate un descanso de 5 minutos. Cuando regreses, continuamos.", context: "Sobrecarga" }
+            ]
+        };
+        
+        // Modules data
+        const modules = {
+            comportamiento: {
+                title: "Comprensión del Comportamiento Infantil",
+                content: `
+                    <p>Todo comportamiento tiene un propósito. Según la psicología adleriana, los niños buscan <strong>pertenencia y contribución</strong>.</p>
+                    <h4>Puntos Clave:</h4>
+                    <ul>
+                        <li>El cerebro infantil no está completamente desarrollado hasta los 25 años</li>
+                        <li>Las conexiones neuronales se fortalecen con la repetición</li>
+                        <li>El estrés activa respuestas de lucha, huida o congelación</li>
+                        <li>Los niños no nos "hacen enojar", nosotros elegimos cómo reaccionar</li>
+                    </ul>
+                    <h4>Recuerda:</h4>
+                    <p>Un niño que "actúa mal" es un niño que necesita ayuda, no castigo.</p>
+                `
+            },
+            berrinches: {
+                title: "Manejo de Berrinches",
+                content: `
+                    <p>Los berrinches son <strong>normales</strong> en el desarrollo. Ocurren cuando el sistema nervioso del niño se sobrecarga.</p>
+                    <h4>Estrategias:</h4>
+                    <ul>
+                        <li><strong>Mantén la calma:</strong> Tu regulación emocional es el modelo</li>
+                        <li><strong>Presencia segura:</strong> Quédate cerca sin intentar "arreglar"</li>
+                        <li><strong>Valida sin ceder:</strong> "Veo que estás molesto. No puedes tener eso, y está bien"</li>
+                        <li><strong>Ofrece opciones:</strong> ¿Abrazo o espacio?</li>
+                    </ul>
+                    <h4>Qué evitar:</h4>
+                    <ul>
+                        <li>Tratar de razonar durante el berrinche</li>
+                        <li>Ceder para que pare de llorar</li>
+                        <li>Regañar o amenazar</li>
+                    </ul>
+                `
+            },
+            limites: {
+                title: "Límites Firmes y Amables",
+                content: `
+                    <p>Los límites firmes Y amables son el corazón de la disciplina positiva.</p>
+                    <h4>Estrategias:</h4>
+                    <ul>
+                        <li><strong>Formula límites positivos:</strong> "Camina despacio" en lugar de "No corras"</li>
+                        <li><strong>Ofrece elección dentro del límite:</strong> "Es hora de bañarte. ¿Entras tú o te ayudo?"</li>
+                        <li><strong>Usa "primero... luego...":</strong> "Primero cena, luego jugar"</li>
+                        <li><strong>Sé breve y específico:</strong> Las explicaciones largas diluyen el mensaje</li>
+                    </ul>
+                    <h4>Recuerda:</h4>
+                    <p>Un límite sin empatía es autoritarismo. Empatía sin límite es permisividad. <strong>Necesitamos ambos.</strong></p>
+                `
+            },
+            consecuencias: {
+                title: "Consecuencias Lógicas vs Castigos",
+                content: `
+                    <p>Las consecuencias lógicas enseñan responsabilidad. Los castigos generan resentimiento.</p>
+                    <h4>Consecuencia Lógica:</h4>
+                    <ul>
+                        <li>Relacionada con la conducta</li>
+                        <li>Respetuosa</li>
+                        <li>Razonable</li>
+                        <li>Revelada de antemano</li>
+                    </ul>
+                    <h4>Ejemplos:</h4>
+                    <ul>
+                        <li>Si no comes la cena, no hay postre (relacionado)</li>
+                        <li>Si tiras los juguetes, se guardan por hoy (relacionado)</li>
+                        <li>Si maltratas el iPad, no lo usas esta semana (relacionado)</li>
+                    </ul>
+                    <h4>Pregúntate:</h4>
+                    <p>¿Esto enseña una habilidad o genera miedo? Si genera miedo, es castigo.</p>
+                `
+            },
+            regulacion: {
+                title: "Regulación Emocional Parental",
+                content: `
+                    <p>No puedes enseñar lo que no puedes hacer. Los niños aprenden regulación emocional <strong>co-regulándose</strong> con adultos tranquilos.</p>
+                    <h4>Estrategias:</h4>
+                    <ul>
+                        <li><strong>Pausa consciente:</strong> Respira 3 veces antes de responder</li>
+                        <li><strong>Detecta tus disparadores:</strong> ¿Qué conductas te activan más?</li>
+                        <li><strong>Ritual de transición:</strong> 2 minutos de respiración antes de llegar a casa</li>
+                        <li><strong>Red de apoyo:</strong> ¿A quién puedes llamar?</li>
+                    </ul>
+                    <h4>Recuerda:</h4>
+                    <p>Un padre que se perdona a sí mismo modela la auto-compasión más poderosa.</p>
+                `
+            },
+            tdah: {
+                title: "Adaptaciones para TDAH",
+                content: `
+                    <p>Los niños con TDAH tienen un desarrollo ejecutivo diferente. No es mala conducta, es un cerebro que funciona de manera distinta.</p>
+                    <h4>Estrategias:</h4>
+                    <ul>
+                        <li><strong>Instrucciones en trozos:</strong> Una instrucción a la vez</li>
+                        <li><strong>Ayudas visuales:</strong> Rutinas en imágenes, temporizadores</li>
+                        <li><strong>Movimiento permitido:</strong> Necesitan moverse para concentrarse</li>
+                        <li><strong>Transiciones anunciadas:</strong> "En 5 minutos... en 2 minutos..."</li>
+                        <li><strong>Refuerzo inmediato:</strong> Las consecuencias demoradas no funcionan igual</li>
+                    </ul>
+                    <h4>Recuerda:</h4>
+                    <p>El TDAH no es una excusa, es una explicación. Con las adaptaciones correctas, estos niños pueden prosperar.</p>
+                `
+            }
+        };
+        
+        // Navigation
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const section = this.dataset.section;
+                showSection(section);
+            });
+        });
+        
+        function showSection(section) {
+            // Update nav
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.section === section);
+            });
+            
+            // Update sections
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.toggle('active', sec.id === section);
+            });
+            
+            // Show/hide chat input
+            const chatInput = document.getElementById('chat-input-area');
+            chatInput.style.display = section === 'consultation' ? 'flex' : 'none';
+            
+            currentSection = section;
+            
+            // Load content for phrases
+            if (section === 'phrases') {
+                showCategory(currentCategory);
+            }
+        }
+        
+        // Chat functionality
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            
+            if (!text || isLoading) return;
+            
+            // Clear welcome
+            const container = document.getElementById('chat-messages');
+            const welcome = container.querySelector('.welcome');
+            if (welcome) welcome.remove();
+            
+            // Add user message
+            addMessage('user', text);
+            input.value = '';
+            
+            // Show loading
+            isLoading = true;
+            showLoading();
+            
+            // Add to message history
+            messages.push({ role: 'user', content: text });
+            
+            try {
+                // Call the AI API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: text,
+                        history: messages.slice(0, -1) // Send previous messages as context
+                    })
+                });
+                
+                const data = await response.json();
+                
+                hideLoading();
+                
+                if (data.success && data.response) {
+                    addMessage('assistant', data.response);
+                    messages.push({ role: 'assistant', content: data.response });
+                } else {
+                    // Fallback to local response if API fails
+                    const fallbackResponse = generateResponse(text);
+                    addMessage('assistant', fallbackResponse);
+                    messages.push({ role: 'assistant', content: fallbackResponse });
+                }
+            } catch (error) {
+                console.error('Error calling API:', error);
+                hideLoading();
+                
+                // Fallback to local response
+                const fallbackResponse = generateResponse(text);
+                addMessage('assistant', fallbackResponse);
+                messages.push({ role: 'assistant', content: fallbackResponse });
+            }
+            
+            isLoading = false;
+        }
+        
+        function addMessage(role, content) {
+            const container = document.getElementById('chat-messages');
+            const msg = document.createElement('div');
+            msg.className = `message ${role}`;
+            msg.innerHTML = formatMessage(content);
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function formatMessage(content) {
+            return content
+                .replace(/\*\*(.*?)\*\*/g, '<h4>$1</h4>')
+                .replace(/^- (.*)$/gm, '<li>$1</li>')
+                .replace(/^(\d+)\. (.*)$/gm, '<li>$2</li>')
+                .replace(/\n/g, '<br>');
+        }
+        
+        function showLoading() {
+            const container = document.getElementById('chat-messages');
+            const loading = document.createElement('div');
+            loading.className = 'loading';
+            loading.id = 'loading';
+            loading.innerHTML = '<div class="spinner"></div><span>Pensando...</span>';
+            container.appendChild(loading);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) loading.remove();
+        }
+        
+        function generateResponse(query) {
+            const lower = query.toLowerCase();
+            
+            if (lower.includes('berrinch') || lower.includes('pataleta') || lower.includes('llora') || lower.includes('grita')) {
+                return `**💚 Validación para ti**
+Entiendo lo agotador que puede ser manejar estas situaciones. Es completamente normal sentirse frustrado/a.
+
+**🧠 ¿Qué está pasando?**
+Los berrinches son una forma de comunicación. Tu hijo está expresando una emoción que no puede regular por sí solo.
+
+**✨ Qué hacer**
+1. Mantén la calma y respira antes de actuar
+2. Quédate cerca sin intentar "arreglar" inmediatamente
+3. Valida la emoción: "Veo que estás muy molesto/a"
+
+**💬 Frases que puedes usar**
+- "Tus sentimientos son muy grandes ahora. Estoy aquí contigo."
+- "Cuando estés listo/a para hablar, yo estaré aquí."
+- "¿Quieres un abrazo o prefieres espacio?"
+
+**⚠️ Qué evitar**
+- Tratar de razonar durante el berrinche
+- Ceder solo para que pare de llorar
+- Amenazar o regañar
+
+**📚 Por qué funciona**
+La co-regulación ayuda al niño a desarrollar conexiones neuronales para la autorregulación futura.`;
+            }
+            
+            if (lower.includes('pelean') || lower.includes('hermano') || lower.includes('pelea')) {
+                return `**💚 Validación para ti**
+Las peleas entre hermanos son una de las situaciones más desgastantes. No estás solo/a en esto.
+
+**🧠 ¿Qué está pasando?**
+Los hermanos compiten por recursos limitados: tu atención, tiempo y afecto. Es una búsqueda de pertenencia.
+
+**✨ Qué hacer**
+1. No tomes partido inmediatamente
+2. Ofrece ayuda para resolver, no soluciones
+3. Enseña a negociar y turnarse
+
+**💬 Frases que puedes usar**
+- "Veo dos niños con un problema. ¿Quieren ayuda para resolverlo?"
+- "Cada uno me cuenta su versión sin interrumpir."
+- "¿Qué solución funciona para los dos?"
+
+**⚠️ Qué evitar**
+- Comparar a los hermanos
+- Siempre culpar al mayor
+- Ignorar el conflicto
+
+**📚 Por qué funciona**
+Cuando los niños participan en la solución, desarrollan habilidades de negociación y empatía.`;
+            }
+            
+            if (lower.includes('grito') || lower.includes('gritar') || lower.includes('límite')) {
+                return `**💚 Validación para ti**
+Queremos poner límites sin gritar, pero a veces es difícil. Eso no te hace un mal padre/madre.
+
+**🧠 ¿Qué está pasando?**
+Los gritos suelen ser una señal de que estamos al límite de nuestra capacidad de regulación emocional.
+
+**✨ Qué hacer**
+1. Pausa antes de reaccionar: respira 3 veces
+2. Usa un tono firme pero tranquilo
+3. Conecta antes de corregir
+
+**💬 Frases que puedes usar**
+- "Es hora de cenar. ¿Lavas las manos tú o te ayudo?"
+- "Entiendo que quieres seguir. Primero esto, luego aquello."
+- "En esta familia nos hablamos con respeto. Intentémoslo de nuevo."
+
+**⚠️ Qué evitar**
+- Amenazar sin cumplir
+- Dar explicaciones largas
+- Pedir perdón excesivamente
+
+**📚 Por qué funciona**
+Los límites firmes Y amables enseñan respeto sin generar miedo ni resentimiento.`;
+            }
+            
+            if (lower.includes('tarea') || lower.includes('estudiar') || lower.includes('deberes')) {
+                return `**💚 Validación para ti**
+La batalla de las tareas es muy común. Es comprensible que te frustres.
+
+**🧠 ¿Qué está pasando?**
+Después de un día largo, los niños tienen poca energía para tareas que requieren esfuerzo sostenido.
+
+**✨ Qué hacer**
+1. Establece una rutina consistente
+2. Divide las tareas grandes en pasos pequeños
+3. Ofrece compañía, no respuestas
+
+**💬 Frases que puedes usar**
+- "¿Qué parte te cuesta más? Vamos a revisarla juntos."
+- "¿Cuánto tiempo necesitas? ¿20 o 30 minutos?"
+- "Primero terminamos esto, luego puedes jugar."
+
+**⚠️ Qué evitar**
+- Hacer la tarea por el niño
+- Usar la tarea como castigo
+- Perfeccionismo excesivo
+
+**📚 Por qué funciona**
+La autonomía gradual desarrolla autodisciplina y reduce la dependencia parental.`;
+            }
+            
+            // Default response
+            return `**💚 Validación para ti**
+Gracias por compartir esta situación. Es valioso que busques herramientas para manejarla mejor.
+
+**🧠 ¿Qué está pasando?**
+Cada comportamiento tiene un propósito. Tu hijo está tratando de comunicar una necesidad.
+
+**✨ Qué hacer**
+1. Observa sin juzgar: ¿Qué necesita mi hijo?
+2. Conecta antes de corregir
+3. Ofrece alternativas aceptables
+
+**💬 Frases que puedes usar**
+- "Veo que esto es difícil para ti. Estoy aquí para ayudar."
+- "¿Qué necesitas en este momento?"
+- "Hablemos de esto cuando estemos más tranquilos."
+
+**⚠️ Qué evitar**
+- Reaccionar desde el enojo
+- Interpretar malicia donde hay falta de habilidad
+- Ignorar tus propias necesidades
+
+**📚 Por qué funciona**
+La conexión emocional fortalece el vínculo y aumenta la cooperación del niño.`;
+        }
+        
+        function useSuggestion(text) {
+            document.getElementById('message-input').value = text;
+            sendMessage();
+        }
+        
+        // Handle enter key
+        document.getElementById('message-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Phrases
+        function showCategory(category) {
+            currentCategory = category;
+            
+            // Update tabs
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.textContent.toLowerCase().includes(category));
+            });
+            
+            // Load phrases
+            const container = document.getElementById('phrases-container');
+            const categoryPhrases = phrases[category] || phrases.berrinches;
+            
+            container.innerHTML = categoryPhrases.map(p => `
+                <div class="phrase-card">
+                    <div class="phrase-text">"${p.phrase}"</div>
+                    <span class="phrase-context">${p.context}</span>
+                </div>
+            `).join('');
+        }
+        
+        // Modules
+        function showModule(moduleId) {
+            const module = modules[moduleId];
+            if (!module) return;
+            
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = `
+                <div class="card" style="margin-bottom: 16px;">
+                    <div class="card-title">${module.title}</div>
+                    <div style="font-size: 14px; line-height: 1.7;">
+                        ${module.content}
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 16px;" onclick="location.reload()">Volver a módulos</button>
+                </div>
+            `;
+            
+            showSection('consultation');
+            document.getElementById('chat-input-area').style.display = 'none';
+        }
+        
+        // Progress
+        function updateScream(value) {
+            document.getElementById('scream-value').textContent = value + '/5';
+        }
+        
+        function saveProgress() {
+            const screamLevel = document.getElementById('scream-slider').value;
+            const usedPunishment = document.getElementById('punishment-check').checked;
+            const gentleLimits = document.getElementById('gentle-limits').value;
+            const positiveMoments = document.getElementById('positive-input').value;
+            
+            // Save to localStorage
+            const data = {
+                date: new Date().toISOString(),
+                screamLevel,
+                usedPunishment,
+                gentleLimits,
+                positiveMoments
+            };
+            
+            let records = JSON.parse(localStorage.getItem('progress') || '[]');
+            records.push(data);
+            localStorage.setItem('progress', JSON.stringify(records));
+            
+            updateStats();
+            showToast('✅ Registro guardado correctamente');
+        }
+        
+        function updateStats() {
+            const records = JSON.parse(localStorage.getItem('progress') || '[]');
+            
+            if (records.length > 0) {
+                const avgScream = (records.reduce((sum, r) => sum + parseInt(r.screamLevel), 0) / records.length).toFixed(1);
+                const punishmentRate = Math.round((records.filter(r => r.usedPunishment).length / records.length) * 100);
+                const totalPositive = records.reduce((sum, r) => sum + parseInt(r.positiveMoments || 0), 0);
+                
+                document.getElementById('avg-scream').textContent = avgScream;
+                document.getElementById('punishment-rate').textContent = punishmentRate + '%';
+                document.getElementById('positive-moments').textContent = totalPositive;
+            }
+        }
+        
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        // Initialize
+        showSection('consultation');
+        updateStats();
+        
+        // Show chat input for consultation section
+        document.getElementById('chat-input-area').style.display = 'flex';
+    </script>
+</body>
+</html>

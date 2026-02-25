@@ -1,0 +1,212 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 142 76% 36%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 35 80% 92%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 142 76% 36%;
+  --radius: 0.75rem;
+  
+  /* Custom colors for crianza respetuosa */
+  --sage-50: 140 40% 96%;
+  --sage-100: 140 35% 90%;
+  --sage-200: 142 30% 80%;
+  --sage-300: 142 25% 65%;
+  --sage-400: 142 30% 50%;
+  --sage-500: 142 40% 40%;
+  --sage-600: 142 50% 30%;
+  --sage-700: 142 55% 25%;
+  --sage-800: 142 60% 20%;
+  --sage-900: 142 65% 15%;
+  
+  --warm-beige: 35 60% 95%;
+  --soft-blue: 200 60% 95%;
+  --soft-teal: 175 50% 94%;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 142 60% 45%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 35 60% 25%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 142 60% 45%;
+}
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  --color-sage-50: hsl(var(--sage-50));
+  --color-sage-100: hsl(var(--sage-100));
+  --color-sage-200: hsl(var(--sage-200));
+  --color-sage-300: hsl(var(--sage-300));
+  --color-sage-400: hsl(var(--sage-400));
+  --color-sage-500: hsl(var(--sage-500));
+  --color-sage-600: hsl(var(--sage-600));
+  --color-sage-700: hsl(var(--sage-700));
+  --color-sage-800: hsl(var(--sage-800));
+  --color-sage-900: hsl(var(--sage-900));
+  
+  --color-warm-beige: hsl(var(--warm-beige));
+  --color-soft-blue: hsl(var(--soft-blue));
+  --color-soft-teal: hsl(var(--soft-teal));
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--sage-300));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--sage-400));
+}
+
+/* Smooth animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+/* Chat message styling */
+.chat-message {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.chat-message.user {
+  background: linear-gradient(135deg, hsl(var(--sage-500)), hsl(var(--sage-600)));
+  color: white;
+}
+
+.chat-message.assistant {
+  background: hsl(var(--warm-beige));
+  border: 1px solid hsl(var(--sage-200));
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress bar styling */
+.progress-bar {
+  background: linear-gradient(90deg, hsl(var(--sage-400)), hsl(var(--sage-500)));
+}
+
+/* Button primary gradient */
+.btn-primary {
+  background: linear-gradient(135deg, hsl(var(--sage-500)), hsl(var(--sage-600)));
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, hsl(var(--sage-600)), hsl(var(--sage-700)));
+  transform: translateY(-1px);
+}
+
+/* Section backgrounds */
+.bg-sage-gradient {
+  background: linear-gradient(135deg, hsl(var(--sage-50)), hsl(var(--soft-teal)));
+}
+
+/* Phrase card */
+.phrase-card {
+  background: white;
+  border-left: 4px solid hsl(var(--sage-500));
+}
+
+/* Module card gradient */
+.module-card {
+  background: linear-gradient(135deg, white, hsl(var(--sage-50)));
+}

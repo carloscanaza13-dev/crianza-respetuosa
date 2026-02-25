@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Crianza Respetuosa</string>
+    <string name="tagline">Asistente IA para padres</string>
+    
+    <!-- Error messages -->
+    <string name="error_title">Sin conexión</string>
+    <string name="error_message">Verifica tu conexión a internet e intenta de nuevo.</string>
+    <string name="retry">Reintentar</string>
+    <string name="no_internet">No hay conexión a internet</string>
+    
+    <!-- Exit dialog -->
+    <string name="exit_title">¿Salir de la aplicación?</string>
+    <string name="exit_message">¿Estás seguro de que deseas salir?</string>
+    <string name="exit_yes">Sí, salir</string>
+    <string name="exit_no">No, quedarse</string>
+    
+    <!-- Navigation -->
+    <string name="nav_consultation">Consulta IA</string>
+    <string name="nav_modules">Módulos</string>
+    <string name="nav_phrases">Frases</string>
+    <string name="nav_progress">Progreso</string>
+    <string name="nav_academic">Académico</string>
+</resources>

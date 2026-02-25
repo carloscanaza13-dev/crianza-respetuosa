@@ -1,0 +1,66 @@
+#!/bin/bash
+
+################################################################################
+# Gradle wrapper script for Crianza Respetuosa
+# This script downloads and executes Gradle
+################################################################################
+
+DEFAULT_GRADLE_VERSION=8.5
+GRADLE_USER_HOME="${GRADLE_USER_HOME:-$HOME/.gradle}"
+GRADLE_WRAPPER_DIR="$GRADLE_USER_HOME/wrapper/dists"
+GRADLE_ZIP_URL="https://services.gradle.org/distributions/gradle-${DEFAULT_GRADLE_VERSION}-bin.zip"
+GRADLE_SHA="dee6a24de67369913bb8c52c5cdeaf7bbd8a8faf7a95c70c5dcb8d6d09a0c39a"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo -e "${GREEN}=== Crianza Respetuosa - Gradle Build ===${NC}"
+
+# Download Gradle if not present
+GRADLE_HOME=$(find "$GRADLE_WRAPPER_DIR" -name "gradle-${DEFAULT_GRADLE_VERSION}" -type d 2>/dev/null | head -1)
+
+if [ -z "$GRADLE_HOME" ] || [ ! -f "$GRADLE_HOME/bin/gradle" ]; then
+    echo -e "${YELLOW}Downloading Gradle ${DEFAULT_GRADLE_VERSION}...${NC}"
+    mkdir -p "$GRADLE_WRAPPER_DIR"
+    TEMP_ZIP=$(mktemp)
+    
+    if command -v curl &> /dev/null; then
+        curl -fsSL "$GRADLE_ZIP_URL" -o "$TEMP_ZIP"
+    elif command -v wget &> /dev/null; then
+        wget -q "$GRADLE_ZIP_URL" -O "$TEMP_ZIP"
+    else
+        echo -e "${RED}Error: curl or wget required${NC}"
+        exit 1
+    fi
+    
+    echo -e "${YELLOW}Extracting Gradle...${NC}"
+    unzip -q "$TEMP_ZIP" -d "$GRADLE_WRAPPER_DIR"
+    rm "$TEMP_ZIP"
+    
+    GRADLE_HOME=$(find "$GRADLE_WRAPPER_DIR" -name "gradle-${DEFAULT_GRADLE_VERSION}" -type d 2>/dev/null | head -1)
+fi
+
+if [ -z "$GRADLE_HOME" ]; then
+    echo -e "${RED}Error: Gradle installation failed${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}Using Gradle from: $GRADLE_HOME${NC}"
+
+# Set Android SDK path
+export ANDROID_HOME="${ANDROID_HOME:-$HOME/android-sdk}"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+
+if [ ! -d "$ANDROID_HOME/platforms" ]; then
+    echo -e "${RED}Error: Android SDK not found at $ANDROID_HOME${NC}"
+    echo -e "${YELLOW}Please install Android SDK or set ANDROID_HOME environment variable${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}Using Android SDK: $ANDROID_HOME${NC}"
+
+# Execute Gradle
+exec "$GRADLE_HOME/bin/gradle" "$@"

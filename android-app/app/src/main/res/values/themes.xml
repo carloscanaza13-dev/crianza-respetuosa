@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.CrianzaRespetuosa" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/sage_primary</item>
+        <item name="colorPrimaryVariant">@color/sage_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/sage_secondary</item>
+        <item name="colorSecondaryVariant">@color/sage_light</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/sage_primary</item>
+        <item name="android:navigationBarColor">@color/sage_primary</item>
+        <item name="android:windowBackground">@color/sage_background</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Theme.CrianzaRespetuosa.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/sage_background</item>
+        <item name="android:navigationBarColor">@color/sage_background</item>
+        <item name="android:windowBackground">@color/sage_background</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="CustomAlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/sage_primary</item>
+        <item name="colorAccent">@color/sage_primary</item>
+    </style>
+
+</resources>

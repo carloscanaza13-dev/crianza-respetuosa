@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Usuario anónimo para investigación
+model AnonymousUser {
+  id            String   @id @default(cuid())
+  code          String   @unique // Código anónimo para identificación
+  ageRange      String?  // Rango de edad del padre/madre
+  childAgeRange String?  // Rango de edad del hijo/a
+  country       String?  // País de origen
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relaciones
+  consultations Consultation[]
+  weeklyRecords WeeklyRecord[]
+  evaluations   Evaluation[]
+  savedPhrases  SavedPhrase[]
+}
+
+// Consultas con el asistente IA
+model Consultation {
+  id           String   @id @default(cuid())
+  userId       String
+  user         AnonymousUser @relation(fields: [userId], references: [id])
+  situation    String   // Descripción de la situación por el padre
+  response     String   // Respuesta completa de la IA
+  category     String?  // Categoría detectada (berrinche, desobediencia, etc.)
+  helpful      Boolean? // Si la respuesta fue útil
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Registro semanal de progreso
+model WeeklyRecord {
+  id                   String   @id @default(cuid())
+  userId               String
+  user                 AnonymousUser @relation(fields: [userId], references: [id])
+  weekNumber           Int      // Número de semana
+  year                 Int      // Año
+  screamLevel          Int      // Nivel de gritos (1-5)
+  usedPunishment       Boolean  // Si usó castigos
+  appliedGentleLimits  Int      // Veces que aplicó límites firmes y amables
+  positiveMoments      Int      // Momentos positivos registrados
+  challenges           Int      // Desafíos enfrentados
+  notes                String?  // Notas personales
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@unique([userId, weekNumber, year])
+  @@index([userId])
+}
+
+// Evaluación pre/post intervención
+model Evaluation {
+  id                      String   @id @default(cuid())
+  userId                  String
+  user                    AnonymousUser @relation(fields: [userId], references: [id])
+  type                    String   // "pre" o "post"
+  
+  // Escalas de medición (1-5)
+  knowledgeLevel          Int      // Conocimiento sobre crianza respetuosa
+  confidenceLevel         Int      // Confianza en establecer límites
+  emotionalRegulation     Int      // Capacidad de regulación emocional
+  communicationQuality    Int      // Calidad de comunicación con el hijo
+  overallSatisfaction     Int      // Satisfacción general con la crianza
+  
+  // Datos adicionales
+  stressLevel             Int      // Nivel de estrés parental (1-5)
+  supportNetwork          Int      // Red de apoyo percibida (1-5)
+  notes                   String?  // Comentarios adicionales
+  
+  createdAt               DateTime @default(now())
+
+  @@unique([userId, type])
+  @@index([userId])
+}
+
+// Frases modelo guardadas como favoritas
+model SavedPhrase {
+  id          String   @id @default(cuid())
+  userId      String
+  user        AnonymousUser @relation(fields: [userId], references: [id])
+  phrase      String   // La frase modelo
+  category    String   // Categoría (berrinche, desobediencia, etc.)
+  context     String?  // Contexto adicional
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Logs de uso para investigación
+model UsageLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String   // Acción realizada
+  module      String?  // Módulo utilizado
+  duration    Int?     // Duración en segundos
+  metadata    String?  // Datos adicionales en JSON
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}

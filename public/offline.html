@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sin conexión - Crianza Respetuosa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #F8FAF7 0%, #E8F5E9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #5B8C5A, #3D5E3C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .icon svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        h1 {
+            font-size: 24px;
+            color: #2D3436;
+            margin-bottom: 12px;
+        }
+        
+        p {
+            font-size: 16px;
+            color: #636E72;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        
+        .tips {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .tips h3 {
+            font-size: 14px;
+            color: #5B8C5A;
+            margin-bottom: 12px;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips li {
+            font-size: 14px;
+            color: #2D3436;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .tips li:last-child {
+            border-bottom: none;
+        }
+        
+        .tips li::before {
+            content: '💡 ';
+        }
+        
+        .retry-btn {
+            background: linear-gradient(135deg, #5B8C5A, #3D5E3C);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .retry-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        .retry-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .footer {
+            margin-top: 32px;
+            font-size: 12px;
+            color: #636E72;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
+        
+        <h1>Sin conexión a internet</h1>
+        
+        <p>
+            Parece que no tienes conexión a internet. 
+            Verifica tu conexión e intenta de nuevo.
+        </p>
+        
+        <div class="tips">
+            <h3>Mientras tanto, recuerda:</h3>
+            <ul>
+                <li>Un niño que actúa mal necesita ayuda, no castigo</li>
+                <li>La conexión antes que la corrección</li>
+                <li>Tus emociones también son válidas</li>
+            </ul>
+        </div>
+        
+        <button class="retry-btn" onclick="location.reload()">
+            Reintentar
+        </button>
+        
+        <div class="footer">
+            Crianza Respetuosa - Herramienta psicoeducativa
+        </div>
+    </div>
+    
+    <script>
+        // Auto retry when connection returns
+        window.addEventListener('online', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
